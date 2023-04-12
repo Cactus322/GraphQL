@@ -1,0 +1,33 @@
+{
+  "name": "graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "library-backend.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cactus322/GraphQL.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cactus322/GraphQL/issues"
+  },
+  "homepage": "https://github.com/Cactus322/GraphQL#readme",
+  "dependencies": {
+    "@apollo/server": "^4.4.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.3",
+    "graphql": "^16.6.0",
+    "mongoose": "^6.0.0",
+    "mongoose-unique-validator": "^3.1.0",
+    "nanoid": "^4.0.0",
+    "nodemon": "^2.0.22",
+    "nvm": "^0.0.4",
+    "uuid": "^9.0.0"
+  }
+}
