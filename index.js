@@ -100,10 +100,12 @@ mongoose
 //     },
 // ]
 
+// напиши простой сайт
+
 const typeDefs = `
     type Book {
         title: String!
-        author: String!
+        author: Author!
         published:  Int!
         genres: [String]!
         id: ID!
@@ -140,8 +142,7 @@ const resolvers = {
         bookCount: async () => Book.collection.countDocuments(),
         authorCount: async () => Author.collection.countDocuments(),
         allBooks: async (root, { author, genres }) => {
-            let booksFilter = Book.find({})
-            console.log(Book.find({}))
+            let booksFilter = Book.find({}).populate('author', {name: 1})
 
             if (author) {
                 booksFilter = booksFilter.filter((b) => b.author === author)
