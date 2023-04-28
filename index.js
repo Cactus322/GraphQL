@@ -1,5 +1,3 @@
-const { v4: uuid } = require('uuid')
-
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 
@@ -100,8 +98,6 @@ mongoose
 //     },
 // ]
 
-// напиши простой сайт
-
 const typeDefs = `
     type Book {
         title: String!
@@ -142,7 +138,7 @@ const resolvers = {
         bookCount: async () => Book.collection.countDocuments(),
         authorCount: async () => Author.collection.countDocuments(),
         allBooks: async (root, { author, genres }) => {
-            let booksFilter = Book.find({}).populate('author', {name: 1})
+            let booksFilter = Book.find({}).populate('author', { name: 1 })
 
             if (author) {
                 booksFilter = booksFilter.filter((b) => b.author === author)
@@ -156,12 +152,14 @@ const resolvers = {
 
             return booksFilter
         },
-        allAuthors: async () => Author.find({}),
+        allAuthors: async () => await Author.find({}),
     },
     Author: {
         bookCount: async (parent) => {
             const author = await Author.findOne({ name: parent.name })
             const count = await Book.countDocuments({ authorId: author._id })
+
+            console.log(author);
 
             return count
         },
@@ -174,7 +172,7 @@ const resolvers = {
                 { upsert: true, new: true }
             )
 
-            const book = new Book({ ...args, author: author._id })
+            const book = new Book({ ...args, author: author })
 
             return book.save()
         },
