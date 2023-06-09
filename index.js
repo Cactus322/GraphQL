@@ -54,6 +54,7 @@ const typeDefs = `
         allBooks(author: String, genres: String): [Book!]
         allAuthors: [Author!]
         me: User
+        booksByGenre(genre: String!): [Book!]
     }
 
     type Mutation {
@@ -100,6 +101,11 @@ const resolvers = {
         me: (root, args, context) => {
             return context.currentUser
         },
+        booksByGenre: async (parent, { genre }) => {
+            const books = await Book.find({}).populate('author', { name: 1 })
+
+            return books.filter(b => b.genres.includes(genre))
+        }
     },
     Author: {
         bookCount: async (parent) => {
@@ -190,7 +196,7 @@ const resolvers = {
             const user = await User.findOne({ username: args.username })
 
             if (!user || args.password !== 'secret') {
-                throw new GraphQLError('wrong credentia;s', {
+                throw new GraphQLError('wrong credentials', {
                     extensions: {
                         code: 'BAD_USER_INPUT',
                     },
