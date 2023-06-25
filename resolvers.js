@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const Book = require('./models/Book')
 const Author = require('./models/Author')
 const User = require('./models/User')
+const authorLoader  = require('./loaders')
 
 const resolvers = {
 	Query: {
@@ -27,7 +28,12 @@ const resolvers = {
 
 			return booksFilter
 		},
-		allAuthors: async () => await Author.find({}),
+		allAuthors: async () => {
+			const authorIds = await Author.find({}).distinct('_id')
+			const authors = await authorLoader.loadMany(authorIds)
+
+			return authors;
+		},
 		me: (root, args, context) => {
 			return context.currentUser
 		},
@@ -35,14 +41,6 @@ const resolvers = {
 			const books = await Book.find({}).populate('author', { name: 1 })
 
 			return books.filter((b) => b.genres.includes(genre))
-		},
-	},
-	Author: {
-		bookCount: async (parent) => {
-			const author = await Author.findOne({ name: parent.name })
-			const count = await Book.countDocuments({ author: author.id })
-
-			return count
 		},
 	},
 	Mutation: {
